@@ -1,2 +1,2 @@
-# DNDDiceRoller
-Simple DND dice builder - customized to friend's stats and current adventure.
+# DNDDiceRollerAssistant
+Simple DND dice roller. Makes playing simpler. 
