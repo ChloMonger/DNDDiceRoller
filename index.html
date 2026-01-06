@@ -20,10 +20,13 @@
       --muted:#666;
 
       /* accent + status colors */
-      --accent:#7c3aed;
+      --accent1: #0ea5a4;
+      --accent2: #22c55e;
       --good:#16a34a;
       --warn:#f59e0b;
       --bad:#dc2626;
+      }
+      {box-sizing: border-box;
     }
 
     body {
@@ -59,14 +62,31 @@
       font-family: inherit;
     }
 
-    .row  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .row  {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .row3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* 📱 Stack inputs on smaller screens */
+    @media (max-width: 600px) {
+      .row,
+      .row3 {
+        grid-template-columns: 1fr;
+            }
+          }
 
     .btn {
       margin-top: 14px;
       cursor: pointer;
       border: 0;
-      background: linear-gradient(135deg, var(--accent), #2563eb);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: white;
       font-weight: 900;
       letter-spacing: .3px;
@@ -75,13 +95,26 @@
     }
     .btn:active { transform: translateY(1px); }
 
-    .btnSecondary{
-      cursor:pointer;
-      border: 1px solid var(--border);
-      background: #fff;
-      font-weight: 800;
+    .btnSecondary {
+      cursor: pointer;
+      border: 1px solid rgba(14,165,164,.35);
+      background: rgba(14,165,164,.10);
+      color: #065f5b;
+      font-weight: 900;
     }
 
+    .btnSecondary:hover {
+      background: rgba(14,165,164,.18);
+    }
+
+    .btnDangerText {
+      cursor: pointer;
+      border: 1px solid rgba(220,38,38,.35);
+      background: transparent;
+      color: var(--bad);
+      font-weight: 900;
+    }
+    
     .result {
       margin-top: 14px;
       padding: 12px;
@@ -91,7 +124,7 @@
     }
 
     .big { font-size: 40px; font-weight: 900; line-height: 1.1; }
-    .muted { color:var(--muted); font-size: 14px; }
+    .muted { color:var(--muted); font-size: 14px; margin-top: 6px; margin-bottom: 10px }
 
     .pill {
       display:inline-block;
@@ -221,7 +254,7 @@
 
       <div class="divider"></div>
 
-      <h2>🩹 Quick actions</h2>
+      <h2>⚡ Quick actions</h2>
 
       <div class="row">
         <div>
@@ -586,3 +619,4 @@
   </script>
 </body>
 </html>
+
