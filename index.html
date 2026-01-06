@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dice Roller + HP Tracker</title>
+
+  <!-- ✅ Roboto font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --border:#ddd;
+      --bg:#ffffff;
+      --panel:#f6f6f6;
+      --panel-2:#f2f7ff;
+      --text:#111;
+      --muted:#666;
+
+      /* accent + status colors */
+      --accent:#7c3aed;
+      --good:#16a34a;
+      --warn:#f59e0b;
+      --bad:#dc2626;
+    }
+
+    body {
+      font-family: "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      margin: 24px;
+      max-width: 820px;
+      color:var(--text);
+      background:var(--bg);
+    }
+
+    .grid { display: grid; gap: 16px; }
+    @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fff;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+    }
+
+    h1 { font-size: 20px; margin: 0 0 12px; font-weight: 900; }
+    h2 { font-size: 16px; margin: 0 0 10px; font-weight: 900; }
+
+    label { display:block; margin: 12px 0 6px; font-weight: 700; }
+
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-family: inherit;
+    }
+
+    .row  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+    .btn {
+      margin-top: 14px;
+      cursor: pointer;
+      border: 0;
+      background: linear-gradient(135deg, var(--accent), #2563eb);
+      color: white;
+      font-weight: 900;
+      letter-spacing: .3px;
+      padding: 12px 14px;
+      box-shadow: 0 8px 18px rgba(124,58,237,.18);
+    }
+    .btn:active { transform: translateY(1px); }
+
+    .btnSecondary{
+      cursor:pointer;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-weight: 800;
+    }
+
+    .result {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--panel-2);
+      border: 1px solid #c7ddff;
+    }
+
+    .big { font-size: 40px; font-weight: 900; line-height: 1.1; }
+    .muted { color:var(--muted); font-size: 14px; }
+
+    .pill {
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+    .pill.good{ background: rgba(22,163,74,.14); color: var(--good); }
+    .pill.warn{ background: rgba(245,158,11,.16); color: #b45309; }
+    .pill.bad{  background: rgba(220,38,38,.14); color: var(--bad); }
+
+    .log {
+      margin-top: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      max-height: 180px;
+      overflow:auto;
+      font-size: 14px;
+    }
+    .logItem { padding: 6px 0; border-bottom: 1px dashed #ddd; }
+    .logItem:last-child { border-bottom: 0; }
+    .tiny { font-size: 12px; color: var(--muted); }
+
+    .divider { height:1px; background: var(--border); margin: 14px 0; }
+
+    /* Last updated footer */
+    .last-updated {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="grid">
+
+    <!-- 🎲 DICE MODULE -->
+    <div class="card">
+      <h1>🎲 Dice Roller</h1>
+
+      <label for="rollType">Roll type</label>
+      <select id="rollType">
+        <option value="check" selected>Ability / Skill Check (Success tiers)</option>
+        <option value="damage">Combat (Damage roll)</option>
+      </select>
+
+      <div class="row">
+        <div>
+          <label for="count">Number of dice</label>
+          <select id="count">
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+          </select>
+        </div>
+        <div>
+          <label for="die">Die type</label>
+          <select id="die">
+            <option value="4">d4</option>
+            <option value="6">d6</option>
+            <option value="8">d8</option>
+            <option value="10">d10</option>
+            <option value="12">d12</option>
+            <option value="20" selected>d20</option>
+            <option value="100">d100</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="mod">Modifier (optional)</label>
+      <input id="mod" type="number" value="0" />
+
+      <!-- Damage-mode extras -->
+      <div id="damageExtras" style="display:none;">
+        <label for="damageDie">Damage die (Combat mode)</label>
+        <div class="row">
+          <select id="damageDie">
+            <option value="4">1d4</option>
+            <option value="6">1d6</option>
+            <option value="8" selected>1d8</option>
+            <option value="10">1d10</option>
+            <option value="12">1d12</option>
+          </select>
+          <input id="damageMod" type="number" value="0" placeholder="Damage modifier" />
+        </div>
+        <div class="muted">Combat mode ignores the “Die type” above and uses this damage die instead.</div>
+      </div>
+
+      <button class="btn" id="rollBtn">ROLL</button>
+
+      <div class="result" id="output" aria-live="polite">
+        <div class="muted">Press roll to begin.</div>
+      </div>
+    </div>
+
+    <!-- ❤️ HP TRACKER -->
+    <div class="card">
+      <h1>❤️ HP Tracker</h1>
+
+      <div class="row3">
+        <div>
+          <label for="maxHp">Max HP</label>
+          <input id="maxHp" type="number" value="0" min="0" />
+        </div>
+        <div>
+          <label for="damageTaken">Damage taken</label>
+          <input id="damageTaken" type="number" value="0" min="0" />
+        </div>
+        <div>
+          <label for="hpRemaining">HP remaining</label>
+          <input id="hpRemaining" type="number" value="0" readonly />
+        </div>
+      </div>
+
+      <!-- HP BAR -->
+      <label style="margin-top:14px;">HP Bar</label>
+      <div style="border:1px solid var(--border); border-radius:999px; padding:6px; background:#fff;">
+        <div id="hpBarFill" style="height:16px; width:0%; border-radius:999px; transition: width .2s ease;"></div>
+      </div>
+      <div class="muted" id="hpBarText" style="margin-top:6px;">0 / 0</div>
+
+      <div class="divider"></div>
+
+      <h2>🩹 Quick actions</h2>
+
+      <div class="row">
+        <div>
+          <label for="damageAmount">Take damage</label>
+          <input id="damageAmount" type="number" value="0" min="0" />
+          <div class="muted">Adds to damage taken.</div>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btnSecondary" id="applyDamageBtn">Apply Damage</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="healAmount">Healing</label>
+          <input id="healAmount" type="number" value="0" min="0" />
+          <div class="muted">Subtracts from damage taken.</div>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btnSecondary" id="applyHealBtn">Apply Healing</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="levelHpGain">Level up: HP gained</label>
+          <input id="levelHpGain" type="number" value="0" min="0" />
+          <div class="muted">Adds to Max HP.</div>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btnSecondary" id="applyLevelBtn">Apply Level Up</button>
+        </div>
+      </div>
+
+      <button class="btnSecondary" id="resetHpBtn" style="margin-top:12px;">Reset (clear damage + log)</button>
+
+      <div class="divider"></div>
+      <h2>📜 HP Log</h2>
+      <div class="muted">Saved on this device (persists if they close the tab).</div>
+      <div class="log" id="hpLog"></div>
+    </div>
+
+  </div>
+
+  <!-- 🕒 Last updated footer -->
+  <div id="lastUpdated" class="last-updated">Last updated: —</div>
+
+  <script>
+    /***********************
+     * ✅ CONFIG
+     ***********************/
+    const STORAGE_KEY = "dice_hp_tracker_v2";
+
+    // Outcome table for d20 checks
+    // Each entry: [minInclusive, maxInclusive, label, tone]
+    const d20Outcomes = [
+      [1, 5,   "Failure",         "bad"],
+      [6, 10,  "Partial Failure", "warn"],
+      [11, 15, "Partial Success", "warn"],
+      [16, 20, "Success",         "good"]
+    ];
+
+    /***********************
+     * 🔎 ELEMENTS
+     ***********************/
+    const el = {
+      // dice
+      rollType: document.getElementById("rollType"),
+      count: document.getElementById("count"),
+      die: document.getElementById("die"),
+      mod: document.getElementById("mod"),
+      damageExtras: document.getElementById("damageExtras"),
+      damageDie: document.getElementById("damageDie"),
+      damageMod: document.getElementById("damageMod"),
+      rollBtn: document.getElementById("rollBtn"),
+      output: document.getElementById("output"),
+
+      // hp
+      maxHp: document.getElementById("maxHp"),
+      damageTaken: document.getElementById("damageTaken"),
+      hpRemaining: document.getElementById("hpRemaining"),
+      hpBarFill: document.getElementById("hpBarFill"),
+      hpBarText: document.getElementById("hpBarText"),
+
+      damageAmount: document.getElementById("damageAmount"),
+      healAmount: document.getElementById("healAmount"),
+      levelHpGain: document.getElementById("levelHpGain"),
+
+      applyDamageBtn: document.getElementById("applyDamageBtn"),
+      applyHealBtn: document.getElementById("applyHealBtn"),
+      applyLevelBtn: document.getElementById("applyLevelBtn"),
+      resetHpBtn: document.getElementById("resetHpBtn"),
+
+      hpLog: document.getElementById("hpLog"),
+
+      // footer
+      lastUpdated: document.getElementById("lastUpdated"),
+    };
+
+    /***********************
+     * 🧰 HELPERS
+     ***********************/
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function rollDie(sides) {
+      return Math.floor(Math.random() * sides) + 1;
+    }
+
+    function syncRollTypeUI(){
+      const isDamage = el.rollType.value === "damage";
+      el.damageExtras.style.display = isDamage ? "block" : "none";
+    }
+
+    function outcomeForCheck(total, dieSides) {
+      if (dieSides !== 20) return { label: "Rolled!", tone: "warn" };
+      for (const [min, max, label, tone] of d20Outcomes) {
+        if (total >= min && total <= max) return { label, tone };
+      }
+      return { label: "Rolled!", tone: "warn" };
+    }
+
+    function pillHtml(label, tone){
+      const cls = tone === "good" ? "good" : tone === "bad" ? "bad" : "warn";
+      return `<div class="pill ${cls}">${label}</div>`;
+    }
+
+    function setLastUpdated(dateObj){
+      if(!el.lastUpdated) return;
+      const d = dateObj || new Date();
+      el.lastUpdated.textContent = `Last updated: ${d.toLocaleString()}`;
+    }
+
+    /***********************
+     * 📜 LOG
+     ***********************/
+    function readLog(){
+      try{
+        const raw = el.hpLog.dataset.items;
+        return raw ? JSON.parse(raw) : [];
+      }catch{
+        return [];
+      }
+    }
+
+    function writeLog(items){
+      el.hpLog.dataset.items = JSON.stringify(items);
+      el.hpLog.innerHTML = items.length
+        ? items.map(x => `
+            <div class="logItem">
+              <div>${x.text}</div>
+              <div class="tiny">${x.time}</div>
+            </div>
+          `).join("")
+        : `<div class="muted">No entries yet.</div>`;
+    }
+
+    function addLog(text){
+      const items = readLog();
+      const time = new Date().toLocaleString();
+      items.unshift({ text, time });
+      writeLog(items.slice(0, 60));
+    }
+
+    /***********************
+     * ❤️ HP CALC + BAR
+     ***********************/
+    function updateHpRemainingAndBar(){
+      const maxHp = Math.max(0, parseInt(el.maxHp.value || "0", 10));
+      const dmg   = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
+
+      const remaining = clamp(maxHp - dmg, 0, maxHp);
+      el.hpRemaining.value = String(remaining);
+
+      const pct = maxHp > 0 ? (remaining / maxHp) * 100 : 0;
+      el.hpBarFill.style.width = `${pct}%`;
+
+      // Color thresholds: green >60, yellow 31-60, red 0-30
+      let color = "var(--good)";
+      if (pct <= 30) color = "var(--bad)";
+      else if (pct <= 60) color = "var(--warn)";
+      el.hpBarFill.style.background = color;
+
+      el.hpBarText.textContent = `${remaining} / ${maxHp}`;
+    }
+
+    /***********************
+     * 💾 STATE (localStorage)
+     ***********************/
+    function getState(){
+      return {
+        rollType: el.rollType.value,
+        count: parseInt(el.count.value || "1", 10),
+        die: parseInt(el.die.value || "20", 10),
+        mod: parseInt(el.mod.value || "0", 10),
+        damageDie: parseInt(el.damageDie.value || "8", 10),
+        damageMod: parseInt(el.damageMod.value || "0", 10),
+
+        maxHp: parseInt(el.maxHp.value || "0", 10),
+        damageTaken: parseInt(el.damageTaken.value || "0", 10),
+
+        hpLog: readLog(),
+
+        lastUpdatedISO: new Date().toISOString()
+      };
+    }
+
+    function saveState(){
+      const s = getState();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+      setLastUpdated(new Date(s.lastUpdatedISO));
+    }
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      }catch{
+        return null;
+      }
+    }
+
+    function applyState(state){
+      if(!state) return;
+
+      el.rollType.value = state.rollType || "check";
+      el.count.value = String(state.count ?? 1);
+      el.die.value = String(state.die ?? 20);
+      el.mod.value = String(state.mod ?? 0);
+      el.damageDie.value = String(state.damageDie ?? 8);
+      el.damageMod.value = String(state.damageMod ?? 0);
+
+      el.maxHp.value = String(state.maxHp ?? 0);
+      el.damageTaken.value = String(state.damageTaken ?? 0);
+
+      writeLog(state.hpLog || []);
+
+      syncRollTypeUI();
+      updateHpRemainingAndBar();
+
+      if (state.lastUpdatedISO) setLastUpdated(new Date(state.lastUpdatedISO));
+    }
+
+    /***********************
+     * 🎲 ROLL ACTION
+     ***********************/
+    function doRoll(){
+      const rollType = el.rollType.value;
+
+      if (rollType === "check"){
+        const count = parseInt(el.count.value || "1", 10);
+        const dieSides = parseInt(el.die.value || "20", 10);
+        const mod = parseInt(el.mod.value || "0", 10);
+
+        const rolls = Array.from({length: count}, () => rollDie(dieSides));
+        const sum = rolls.reduce((a,b) => a + b, 0);
+        const total = sum + mod;
+
+        const { label, tone } = outcomeForCheck(total, dieSides);
+
+        el.output.innerHTML = `
+          <div class="big">${total}</div>
+          <div><strong>${label}</strong></div>
+          ${pillHtml(label, tone)}
+          <div class="muted" style="margin-top:8px;">
+            Rolls: ${rolls.join(", ")}${mod ? ` • Modifier: ${mod >= 0 ? "+" : ""}${mod}` : ""}
+          </div>
+        `;
+      } else {
+        // damage mode
+        const dmgSides = parseInt(el.damageDie.value || "8", 10);
+        const dmgMod = parseInt(el.damageMod.value || "0", 10);
+        const dmgRoll = rollDie(dmgSides);
+        const dmgTotal = dmgRoll + dmgMod;
+
+        el.output.innerHTML = `
+          <div class="big">${dmgTotal}</div>
+          <div><strong>${dmgTotal} damage</strong></div>
+          <div class="pill good">${dmgTotal} damage</div>
+          <div class="muted" style="margin-top:8px;">
+            Damage roll: ${dmgRoll} on 1d${dmgSides}${dmgMod ? ` • Mod: ${dmgMod >= 0 ? "+" : ""}${dmgMod}` : ""}
+          </div>
+        `;
+      }
+
+      saveState();
+    }
+
+    /***********************
+     * 🔌 EVENTS
+     ***********************/
+    el.rollType.addEventListener("change", () => { syncRollTypeUI(); saveState(); });
+    el.rollBtn.addEventListener("click", doRoll);
+
+    ["change","input"].forEach(evt => {
+      el.count.addEventListener(evt, saveState);
+      el.die.addEventListener(evt, saveState);
+      el.mod.addEventListener(evt, saveState);
+      el.damageDie.addEventListener(evt, saveState);
+      el.damageMod.addEventListener(evt, saveState);
+
+      el.maxHp.addEventListener(evt, () => { updateHpRemainingAndBar(); saveState(); });
+      el.damageTaken.addEventListener(evt, () => { updateHpRemainingAndBar(); saveState(); });
+    });
+
+    el.applyDamageBtn.addEventListener("click", () => {
+      const delta = Math.max(0, parseInt(el.damageAmount.value || "0", 10));
+      if(delta === 0) return;
+
+      const current = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
+      el.damageTaken.value = String(current + delta);
+
+      updateHpRemainingAndBar();
+      addLog(`Took ${delta} damage. Remaining HP = ${el.hpRemaining.value}.`);
+      saveState();
+    });
+
+    el.applyHealBtn.addEventListener("click", () => {
+      const heal = Math.max(0, parseInt(el.healAmount.value || "0", 10));
+      if(heal === 0) return;
+
+      const current = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
+      el.damageTaken.value = String(Math.max(0, current - heal));
+
+      updateHpRemainingAndBar();
+      addLog(`Healed ${heal}. Remaining HP = ${el.hpRemaining.value}.`);
+      saveState();
+    });
+
+    el.applyLevelBtn.addEventListener("click", () => {
+      const gain = Math.max(0, parseInt(el.levelHpGain.value || "0", 10));
+      if(gain === 0) return;
+
+      const currentMax = Math.max(0, parseInt(el.maxHp.value || "0", 10));
+      el.maxHp.value = String(currentMax + gain);
+
+      updateHpRemainingAndBar();
+      addLog(`Leveled up: Max HP +${gain} → ${el.maxHp.value}.`);
+      saveState();
+    });
+
+    el.resetHpBtn.addEventListener("click", () => {
+      el.damageTaken.value = "0";
+      updateHpRemainingAndBar();
+      writeLog([]);
+      addLog("Reset HP tracker.");
+      saveState();
+    });
+
+    /***********************
+     * 🚀 INIT
+     ***********************/
+    syncRollTypeUI();
+    writeLog([]);
+    updateHpRemainingAndBar();
+    setLastUpdated();
+
+    const saved = loadState();
+    if(saved) applyState(saved);
+  </script>
+</body>
+</html>
