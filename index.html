@@ -222,6 +222,31 @@
       color: #999;
       font-style: italic;
     }
+
+    /* 📱 Mobile spacing refinements */
+@media (max-width: 650px) {
+
+  /* Reduce space between stacked action rows */
+  .row.action {
+    gap: 6px;
+  }
+
+  /* Pull buttons closer to inputs */
+  .row.action button {
+    margin-top: 2px;
+  }
+
+  /* Reduce extra space under helper text */
+  .row.action .muted {
+    margin-bottom: 4px;
+  }
+
+  /* Slightly tighten overall vertical rhythm */
+  label {
+    margin-top: 10px;
+  }
+}
+
   </style>
 </head>
 
@@ -656,6 +681,7 @@
   </script>
 </body>
 </html>
+
 
 
 
