@@ -141,17 +141,24 @@
     }
     .btnSecondary:hover { background: rgba(14,165,164,.18); }
 
-    /* Reset = red text only */
-    .btnDangerText {
-      cursor: pointer;
-      border: none;
-      background: none;
-      color: var(--bad);
-      font-weight: 900;
-      padding: 10px;
-      text-align: center;
-    }
-    .btnDangerText:hover { text-decoration: underline; }
+.btnDangerText {
+  cursor: pointer;
+  background: transparent;
+  color: var(--bad);
+  font-weight: 900;
+  padding: 10px 14px;
+  text-align: center;
+
+  /* 👇 this is the key part */
+  border: 1px solid rgba(220, 38, 38, 0.45);
+  border-radius: 12px;
+}
+
+.btnDangerText:hover {
+  background: rgba(220, 38, 38, 0.06);
+  text-decoration: none;
+}
+
 
     .result {
       margin-top: 14px;
@@ -649,6 +656,7 @@
   </script>
 </body>
 </html>
+
 
 
 
