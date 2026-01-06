@@ -226,26 +226,33 @@
     /* 📱 Mobile spacing refinements */
 @media (max-width: 650px) {
 
-  /* Reduce space between stacked action rows */
+  /* Tighten layout inside each action */
   .row.action {
     gap: 6px;
+    margin-bottom: 18px;
   }
 
-  /* Pull buttons closer to inputs */
+  /* Pull button closer to its input */
   .row.action button {
-    margin-top: 2px;
+    margin-top: 4px;
   }
 
-  /* Reduce extra space under helper text */
+  /* Reduce space under helper text */
   .row.action .muted {
     margin-bottom: 4px;
   }
 
-  /* Slightly tighten overall vertical rhythm */
+  /* Slightly tighten label rhythm */
   label {
     margin-top: 10px;
   }
+
+  /* Less space after the last action (before Reset) */
+  .row.action:last-of-type {
+    margin-bottom: 8px;
+  }
 }
+
 
   </style>
 </head>
@@ -681,6 +688,7 @@
   </script>
 </body>
 </html>
+
 
 
 
