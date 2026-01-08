@@ -330,7 +330,6 @@
       <label for="maxHp">Max HP</label>
       <input id="maxHp" type="number" value="0" min="0" />
 
-      <!-- Hidden state: needed for quick actions + HP bar math -->
       <input id="damageTaken" type="number" value="0" min="0" style="display:none;" />
 
       <label style="margin-top:14px;">HP Bar</label>
@@ -341,13 +340,13 @@
       
       <div class="divider"></div>
 
-
       <h1>⚡ Quick actions</h1>
 
       <div class="row action">
         <div>
           <label for="damageAmount">Take damage</label>
           <input id="damageAmount" type="number" value="0" min="0" />
+          <button id="applyDamageBtn">Apply Damage</button>
           <div class="muted">Adds to damage taken.</div>
         </div>
         <div>
@@ -360,6 +359,7 @@
         <div>
           <label for="healAmount">Healing</label>
           <input id="healAmount" type="number" value="0" min="0" />
+          <button id="applyHealBtn">Apply Healing</button>
           <div class="muted">Subtracts from damage taken.</div>
         </div>
         <div>
@@ -372,6 +372,7 @@
         <div>
           <label for="levelHpGain">Level up: HP gained</label>
           <input id="levelHpGain" type="number" value="0" min="0" />
+          <button id="applyLevelBtn">Apply Level Up</button>
           <div class="muted">Adds to Max HP.</div>
         </div>
         <div>
@@ -381,11 +382,12 @@
       </div>
 
       <button class="btnDangerText" id="resetHpBtn" style="margin-top:6px;">Reset (clear damage + log)</button>
+      <button id="resetHpBtn">Reset...</button> 
 
       <div class="divider"></div>
 
       <h2>📜 HP Log</h2>
-      <div class="muted">Saved on this device (persists if they close the tab).</div>
+      <div class="muted">Saved on this device.</div>
       <div class="log" id="hpLog"></div>
     </div>
 
@@ -667,6 +669,87 @@
       addLog("Reset HP tracker.");
       saveState();
     });
+
+    function wireHpTracker() {
+  const maxHpEl = document.getElementById("maxHp");
+  const damageTakenEl = document.getElementById("damageTaken");
+  const hpBarFillEl = document.getElementById("hpBarFill");
+  const hpBarTextEl = document.getElementById("hpBarText");
+
+  const dmgAmtEl = document.getElementById("damageAmount");
+  const healAmtEl = document.getElementById("healAmount");
+  const levelGainEl = document.getElementById("levelHpGain");
+
+  const applyDmgBtn = document.getElementById("applyDamageBtn");
+  const applyHealBtn = document.getElementById("applyHealBtn");
+  const applyLevelBtn = document.getElementById("applyLevelBtn");
+  const resetBtn = document.getElementById("resetHpBtn");
+
+  // If any critical element is missing, stop quietly (prevents whole script from dying)
+  if (!maxHpEl || !damageTakenEl || !hpBarFillEl || !hpBarTextEl) return;
+
+  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+  function updateBar() {
+    const maxHp = Math.max(0, parseInt(maxHpEl.value || "0", 10));
+    const dmg = Math.max(0, parseInt(damageTakenEl.value || "0", 10));
+    const remaining = clamp(maxHp - dmg, 0, maxHp);
+    const pct = maxHp > 0 ? (remaining / maxHp) * 100 : 0;
+
+    hpBarFillEl.style.width = `${pct}%`;
+
+    let color = "var(--good)";
+    if (pct <= 30) color = "var(--bad)";
+    else if (pct <= 60) color = "var(--warn)";
+    hpBarFillEl.style.background = color;
+
+    hpBarTextEl.textContent = `${remaining} / ${maxHp}`;
+  }
+
+  // ✅ live updates when Max HP changes
+  ["input", "change"].forEach(evt => {
+    maxHpEl.addEventListener(evt, updateBar);
+  });
+
+  // ✅ Apply Damage
+  applyDmgBtn?.addEventListener("click", () => {
+    const delta = Math.max(0, parseInt(dmgAmtEl?.value || "0", 10));
+    if (!delta) return;
+    const current = Math.max(0, parseInt(damageTakenEl.value || "0", 10));
+    damageTakenEl.value = String(current + delta);
+    updateBar();
+  });
+
+  // ✅ Apply Healing
+  applyHealBtn?.addEventListener("click", () => {
+    const heal = Math.max(0, parseInt(healAmtEl?.value || "0", 10));
+    if (!heal) return;
+    const current = Math.max(0, parseInt(damageTakenEl.value || "0", 10));
+    damageTakenEl.value = String(Math.max(0, current - heal));
+    updateBar();
+  });
+
+  // ✅ Apply Level Up
+  applyLevelBtn?.addEventListener("click", () => {
+    const gain = Math.max(0, parseInt(levelGainEl?.value || "0", 10));
+    if (!gain) return;
+    const currentMax = Math.max(0, parseInt(maxHpEl.value || "0", 10));
+    maxHpEl.value = String(currentMax + gain);
+    updateBar();
+  });
+
+  // ✅ Reset
+  resetBtn?.addEventListener("click", () => {
+    damageTakenEl.value = "0";
+    updateBar();
+  });
+
+  // initial paint
+  updateBar();
+}
+
+// Make sure the DOM exists before wiring
+document.addEventListener("DOMContentLoaded", wireHpTracker);
     
     // Init
     syncRollTypeUI();
@@ -679,6 +762,7 @@
   </script>
 </body>
 </html>
+
 
 
 
