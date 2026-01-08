@@ -334,10 +334,6 @@
           <input id="maxHp" type="number" value="0" min="0" />
         </div>
         <div>
-          <label for="damageTaken">Damage taken</label>
-          <input id="damageTaken" type="number" value="0" min="0" />
-        </div>
-      </div>
 
       <label style="margin-top:14px;">HP Bar</label>
       <div class="hpbar-outer">
@@ -424,8 +420,6 @@
 
       // hp tracker
       maxHp: document.getElementById("maxHp"),
-      damageTaken: document.getElementById("damageTaken"),
-      hpRemaining: document.getElementById("hpRemaining"),
       hpBarFill: document.getElementById("hpBarFill"),
       hpBarText: document.getElementById("hpBarText"),
 
@@ -499,7 +493,6 @@
     // HP calc + bar
     function updateHpRemainingAndBar(){
       const maxHp = Math.max(0, parseInt(el.maxHp.value || "0", 10));
-      const dmg   = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
 
       const remaining = clamp(maxHp - dmg, 0, maxHp);
       el.hpRemaining.value = String(remaining);
@@ -559,7 +552,6 @@
       el.damageMod.value = String(state.damageMod ?? 0);
 
       el.maxHp.value = String(state.maxHp ?? 0);
-      el.damageTaken.value = String(state.damageTaken ?? 0);
 
       writeLog(state.hpLog || []);
       syncRollTypeUI();
@@ -622,15 +614,10 @@
       el.damageMod.addEventListener(evt, saveState);
 
       el.maxHp.addEventListener(evt, () => { updateHpRemainingAndBar(); saveState(); });
-      el.damageTaken.addEventListener(evt, () => { updateHpRemainingAndBar(); saveState(); });
-    });
 
     el.applyDamageBtn.addEventListener("click", () => {
       const delta = Math.max(0, parseInt(el.damageAmount.value || "0", 10));
       if(delta === 0) return;
-
-      const current = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
-      el.damageTaken.value = String(current + delta);
 
       updateHpRemainingAndBar();
       addLog(`Took ${delta} damage. Remaining HP = ${el.hpRemaining.value}.`);
@@ -640,9 +627,6 @@
     el.applyHealBtn.addEventListener("click", () => {
       const heal = Math.max(0, parseInt(el.healAmount.value || "0", 10));
       if(heal === 0) return;
-
-      const current = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
-      el.damageTaken.value = String(Math.max(0, current - heal));
 
       updateHpRemainingAndBar();
       addLog(`Healed ${heal}. Remaining HP = ${el.hpRemaining.value}.`);
@@ -680,10 +664,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
