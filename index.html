@@ -416,6 +416,7 @@
       damageMod: document.getElementById("damageMod"),
       rollBtn: document.getElementById("rollBtn"),
       output: document.getElementById("output"),
+      damageTaken: document.getElementById("damageTaken")
 
       // hp tracker
       maxHp: document.getElementById("maxHp"),
@@ -623,35 +624,42 @@
       });
     });
 
-    el.applyDamageBtn.addEventListener("click", () => {
-      const delta = Math.max(0, parseInt(el.damageAmount.value || "0", 10));
-      if(delta === 0) return;
+   el.applyDamageBtn?.addEventListener("click", () => {
+  const delta = Math.max(0, parseInt(el.damageAmount?.value || "0", 10));
+  if (delta === 0) return;
 
-      updateHpRemainingAndBar();
-      addLog(`Took ${delta} damage. Remaining HP = ${el.hpRemaining.value}.`);
-      saveState();
-    });
+  const current = Math.max(0, parseInt(el.damageTaken?.value || "0", 10));
+  el.damageTaken.value = String(current + delta);
 
-    el.applyHealBtn.addEventListener("click", () => {
-      const heal = Math.max(0, parseInt(el.healAmount.value || "0", 10));
-      if(heal === 0) return;
+  updateHpRemainingAndBar();
+  addLog?.(`Took ${delta} damage. Remaining HP = ${el.hpBarText?.textContent || ""}`);
+  saveState?.();
+});
 
-      updateHpRemainingAndBar();
-      addLog(`Healed ${heal}. Remaining HP = ${el.hpRemaining.value}.`);
-      saveState();
-    });
+el.applyHealBtn?.addEventListener("click", () => {
+  const heal = Math.max(0, parseInt(el.healAmount?.value || "0", 10));
+  if (heal === 0) return;
 
-    el.applyLevelBtn.addEventListener("click", () => {
-      const gain = Math.max(0, parseInt(el.levelHpGain.value || "0", 10));
-      if(gain === 0) return;
+  const current = Math.max(0, parseInt(el.damageTaken?.value || "0", 10));
+  el.damageTaken.value = String(Math.max(0, current - heal));
 
-      const currentMax = Math.max(0, parseInt(el.maxHp.value || "0", 10));
-      el.maxHp.value = String(currentMax + gain);
+  updateHpRemainingAndBar();
+  addLog?.(`Healed ${heal}. Remaining HP = ${el.hpBarText?.textContent || ""}`);
+  saveState?.();
+});
 
-      updateHpRemainingAndBar();
-      addLog(`Leveled up: Max HP +${gain} → ${el.maxHp.value}.`);
-      saveState();
-    });
+el.applyLevelBtn?.addEventListener("click", () => {
+  const gain = Math.max(0, parseInt(el.levelHpGain?.value || "0", 10));
+  if (gain === 0) return;
+
+  const currentMax = Math.max(0, parseInt(el.maxHp?.value || "0", 10));
+  el.maxHp.value = String(currentMax + gain);
+
+  updateHpRemainingAndBar();
+  addLog?.(`Leveled up: Max HP +${gain} → ${el.maxHp.value}.`);
+  saveState?.();
+});
+
 
     el.resetHpBtn.addEventListener("click", () => {
       el.damageTaken.value = "0";
@@ -672,6 +680,7 @@
   </script>
 </body>
 </html>
+
 
 
 
