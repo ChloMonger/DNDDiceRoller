@@ -491,20 +491,24 @@
 
     // HP calc + bar
     function updateHpRemainingAndBar(){
-      const maxHp = Math.max(0, parseInt(el.maxHp.value || "0", 10));
-
-      const remaining = clamp(maxHp - dmg, 0, maxHp);
-      el.hpRemaining.value = String(remaining);
-
+      const maxHp = Math.max(0, parseInt(el.maxHp?.value || "0", 10));
+      const dmg   = Math.max(0, parseInt(el.damageTaken?.value || "0", 10));
+    
+      const remaining = Math.max(0, maxHp - dmg);
       const pct = maxHp > 0 ? (remaining / maxHp) * 100 : 0;
-      el.hpBarFill.style.width = `${pct}%`;
-
-      let color = "var(--good)";
-      if (pct <= 30) color = "var(--bad)";
-      else if (pct <= 60) color = "var(--warn)";
-      el.hpBarFill.style.background = color;
-
-      el.hpBarText.textContent = `${remaining} / ${maxHp}`;
+    
+      if (el.hpBarFill) {
+        el.hpBarFill.style.width = `${pct}%`;
+    
+        let color = "var(--good)";
+        if (pct <= 30) color = "var(--bad)";
+        else if (pct <= 60) color = "var(--warn)";
+        el.hpBarFill.style.background = color;
+      }
+    
+      if (el.hpBarText) {
+        el.hpBarText.textContent = `${remaining} / ${maxHp}`;
+      }
     }
 
     // State
@@ -613,6 +617,11 @@
       el.damageMod.addEventListener(evt, saveState);
 
       el.maxHp.addEventListener(evt, () => { updateHpRemainingAndBar(); saveState(); });
+      el.damageTaken?.addEventListener(evt, () => {
+        updateHpRemainingAndBar();
+        saveState();
+      });
+    });
 
     el.applyDamageBtn.addEventListener("click", () => {
       const delta = Math.max(0, parseInt(el.damageAmount.value || "0", 10));
@@ -651,7 +660,7 @@
       addLog("Reset HP tracker.");
       saveState();
     });
-
+    
     // Init
     syncRollTypeUI();
     writeLog([]);
@@ -663,6 +672,7 @@
   </script>
 </body>
 </html>
+
 
 
 
