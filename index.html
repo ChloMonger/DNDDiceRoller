@@ -329,7 +329,10 @@
 
       <label for="maxHp">Max HP</label>
       <input id="maxHp" type="number" value="0" min="0" />
-      
+
+      <!-- Hidden state: needed for quick actions + HP bar math -->
+      <input id="damageTaken" type="number" value="0" min="0" style="display:none;" />
+
       <label style="margin-top:14px;">HP Bar</label>
       <div class="hpbar-outer">
         <div id="hpBarFill" class="hpbar-fill"></div>
@@ -660,5 +663,6 @@
   </script>
 </body>
 </html>
+
 
 
