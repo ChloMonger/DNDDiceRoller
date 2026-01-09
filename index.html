@@ -105,7 +105,11 @@
       gap:12px;
       align-items:start;
     }
-    .row.action{ grid-template-columns: 1.6fr 1fr; }
+    
+.row.action{
+  grid-template-columns: 1.6fr 1fr;
+  margin-bottom: 18px;
+}
 
     @media (max-width:650px){
       .row{ grid-template-columns: 1fr; }
@@ -115,7 +119,19 @@
       .row.action .muted{ margin-bottom:4px; }
       label{ margin-top:10px; }
     }
+      @media (max-width:650px){
+  .row.action {
+    gap: 6px;
+  }
 
+  .row.action button {
+    margin-top: 2px;
+  }
+
+  .row.action .muted {
+    margin-bottom: 4px;
+  }
+}
     .btn{
       margin-top:14px;
       cursor:pointer;
@@ -645,5 +661,6 @@
   </script>
 </body>
 </html>
+
 
 
