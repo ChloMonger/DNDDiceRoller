@@ -7,7 +7,7 @@
 
   <!-- Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 
   <style>
@@ -600,6 +600,7 @@
       el.damageTaken.value = String(current + delta);
       updateHpBar();
       addLog(`Took ${delta} damage. (${el.hpBarText.textContent})`);
+      el.damageAmount.value = "0";
       saveState();
     });
 
@@ -610,6 +611,7 @@
       el.damageTaken.value = String(Math.max(0, current - heal));
       updateHpBar();
       addLog(`Healed ${heal}. (${el.hpBarText.textContent})`);
+      el.healAmount.value = "0";
       saveState();
     });
 
@@ -620,6 +622,7 @@
       el.maxHp.value = String(currentMax + gain);
       updateHpBar();
       addLog(`Leveled up: Max HP +${gain} → ${el.maxHp.value}. (${el.hpBarText.textContent})`);
+      el.levelHpGain.value = "0";
       saveState();
     });
 
@@ -642,4 +645,5 @@
   </script>
 </body>
 </html>
+
 
