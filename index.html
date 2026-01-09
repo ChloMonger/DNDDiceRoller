@@ -390,7 +390,7 @@
       [1, 5,   "Complete Failure", "bad"],
       [6, 10,  "Partial Failure",  "warn"],
       [11, 15, "Partial Success",  "warn"],
-      [16, 20, "Success",          "good"],
+      [16, 999, "Success",          "good"],
     ];
 
     function pillHtml(label, tone){
@@ -445,7 +445,6 @@
 
           el.rollOutput.innerHTML = `
             <div class="big">${total}</div>
-            <strong>${label}</strong>
             ${pillHtml(label, tone)}
             <div class="muted" style="margin-bottom:0;">
               d20 roll: ${roll}${mod ? ` • modifier ${mod >= 0 ? "+" : ""}${mod}` : ""}
@@ -643,3 +642,4 @@
   </script>
 </body>
 </html>
+
