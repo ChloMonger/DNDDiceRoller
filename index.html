@@ -21,238 +21,200 @@
       --text:#111;
       --muted:#666;
 
-      /* teal -> green (not corporate purple 😄) */
-      --accent:#0ea5a4;   /* teal */
-      --accent2:#22c55e;  /* green */
+      /* teal -> green */
+      --accent:#0ea5a4;
+      --accent2:#22c55e;
 
       --good:#16a34a;
       --warn:#f59e0b;
       --bad:#dc2626;
     }
 
-    body {
-      font-family: "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-      margin: 24px;
-      max-width: 900px;
-      color: var(--text);
-      background: var(--bg);
+    body{
+      font-family:"Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      margin:24px;
+      max-width:900px;
+      color:var(--text);
+      background:var(--bg);
     }
 
-    .grid {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: 1fr; /* default stacked */
+    .grid{
+      display:grid;
+      gap:16px;
+      grid-template-columns: 1fr;
     }
-    @media (min-width: 1100px) {
-      .grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    .card {
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      background: #fff;
-      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
-      overflow: hidden; /* extra safety */
+    @media (min-width: 1100px){
+      .grid{ grid-template-columns: 1fr 1fr; }
     }
 
-    h1 {
-      font-size: 20px;
-      margin: 0 0 12px;
-      font-weight: 900;
+    .card{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      background:#fff;
+      box-shadow:0 1px 0 rgba(0,0,0,.03);
+      overflow:hidden;
+    }
+
+    h1{
+      font-size:20px;
+      margin:0 0 12px;
+      font-weight:900;
       display:flex;
-      gap:10px;
       align-items:center;
+      gap:10px;
     }
-    h2 {
-      font-size: 16px;
-      margin: 0 0 10px;
-      font-weight: 900;
+    h2{
+      font-size:16px;
+      margin:0 0 10px;
+      font-weight:900;
       display:flex;
-      gap:10px;
       align-items:center;
+      gap:10px;
     }
 
-    label {
+    label{
       display:block;
-      margin: 12px 0 6px;
-      font-weight: 800;
+      margin:12px 0 6px;
+      font-weight:800;
     }
 
-    select, input, button {
-      width: 100%;
-      max-width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      font-family: inherit;
+    select, input, button{
+      width:100%;
+      max-width:100%;
+      padding:10px;
+      font-size:16px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      font-family:inherit;
     }
 
-    .muted {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 6px;
-      margin-bottom: 10px;
-      line-height: 1.25;
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      margin-top:6px;
+      margin-bottom:10px;
+      line-height:1.25;
     }
 
-    .divider { height:1px; background: var(--border); margin: 14px 0; }
+    .divider{ height:1px; background:var(--border); margin:14px 0; }
 
-    .row {
-      display: grid;
+    .row{
+      display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      align-items: start;
+      gap:12px;
+      align-items:start;
+    }
+    .row.action{ grid-template-columns: 1.6fr 1fr; }
+
+    @media (max-width:650px){
+      .row{ grid-template-columns: 1fr; }
+      .row.action{ grid-template-columns: 1fr; gap:6px; margin-bottom:18px; }
+      .row.action:last-of-type{ margin-bottom:8px; }
+      .row.action button{ margin-top:4px; }
+      .row.action .muted{ margin-bottom:4px; }
+      label{ margin-top:10px; }
     }
 
-    /* Weighted row for action input + button */
-    .row.action {
-      grid-template-columns: 1.6fr 1fr;
+    .btn{
+      margin-top:14px;
+      cursor:pointer;
+      border:0;
+      background:linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+      font-weight:900;
+      letter-spacing:.3px;
+      padding:12px 14px;
+      box-shadow:0 10px 22px rgba(14,165,164,.18);
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .btnSecondary{
+      cursor:pointer;
+      border:1px solid rgba(14,165,164,.35);
+      background:rgba(14,165,164,.10);
+      color:#065f5b;
+      font-weight:900;
+      white-space:nowrap;
+      min-width:160px;
+    }
+    .btnSecondary:hover{ background:rgba(14,165,164,.18); }
+
+    .btnDangerText{
+      cursor:pointer;
+      background:transparent;
+      color:var(--bad);
+      font-weight:900;
+      padding:10px 14px;
+      text-align:center;
+      border:1px solid rgba(220,38,38,.45);
+      border-radius:12px;
+    }
+    .btnDangerText:hover{
+      background:rgba(220,38,38,.06);
+      text-decoration:none;
     }
 
-    /* Stack on narrow screens */
-    @media (max-width: 650px) {
-      .row { grid-template-columns: 1fr; }
-      .row.action { grid-template-columns: 1fr; }
+    .result{
+      margin-top:14px;
+      padding:12px;
+      border-radius:14px;
+      background:var(--panel-2);
+      border:1px solid rgba(14,165,164,.25);
+    }
+    .big{
+      font-size:40px;
+      font-weight:900;
+      line-height:1.1;
     }
 
-    .btn {
-      margin-top: 14px;
-      cursor: pointer;
-      border: 0;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-      font-weight: 900;
-      letter-spacing: .3px;
-      padding: 12px 14px;
-      box-shadow: 0 10px 22px rgba(14,165,164,.18);
-    }
-    .btn:active { transform: translateY(1px); }
-
-    .btnSecondary {
-      cursor: pointer;
-      border: 1px solid rgba(14,165,164,.35);
-      background: rgba(14,165,164,.10);
-      color: #065f5b;
-      font-weight: 900;
-      white-space: nowrap;
-      min-width: 160px;
-    }
-    .btnSecondary:hover { background: rgba(14,165,164,.18); }
-
-.btnDangerText {
-  cursor: pointer;
-  background: transparent;
-  color: var(--bad);
-  font-weight: 900;
-  padding: 10px 14px;
-  text-align: center;
-
-  /* 👇 this is the key part */
-  border: 1px solid rgba(220, 38, 38, 0.45);
-  border-radius: 12px;
-}
-
-.btnDangerText:hover {
-  background: rgba(220, 38, 38, 0.06);
-  text-decoration: none;
-}Fh
-
-    .result {
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 14px;
-      background: var(--panel-2);
-      border: 1px solid rgba(14,165,164,.25);
-    }
-
-    .big {
-      font-size: 40px;
-      font-weight: 900;
-      line-height: 1.1;
-    }
-
-    .pill {
+    .pill{
       display:inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-weight: 900;
-      font-size: 13px;
-      margin-top: 6px;
+      padding:4px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:13px;
+      margin-top:6px;
     }
-    .pill.good{ background: rgba(22,163,74,.14); color: var(--good); }
-    .pill.warn{ background: rgba(245,158,11,.16); color: #b45309; }
-    .pill.bad{  background: rgba(220,38,38,.14); color: var(--bad); }
+    .pill.good{ background:rgba(22,163,74,.14); color:var(--good); }
+    .pill.warn{ background:rgba(245,158,11,.16); color:#b45309; }
+    .pill.bad { background:rgba(220,38,38,.14); color:var(--bad); }
 
-    /* HP bar */
-    .hpbar-outer {
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px;
-      background: #fff;
+    .hpbar-outer{
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px;
+      background:#fff;
     }
-    .hpbar-fill {
-      height: 16px;
-      width: 0%;
-      border-radius: 999px;
+    .hpbar-fill{
+      height:16px;
+      width:0%;
+      border-radius:999px;
       transition: width .2s ease;
       background: var(--good);
     }
 
-    .log {
-      margin-top: 10px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
-      max-height: 180px;
+    .log{
+      margin-top:10px;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px;
+      max-height:180px;
       overflow:auto;
-      font-size: 14px;
+      font-size:14px;
     }
-    .logItem { padding: 6px 0; border-bottom: 1px dashed #ddd; }
-    .logItem:last-child { border-bottom: 0; }
-    .tiny { font-size: 12px; color: var(--muted); }
+    .logItem{ padding:6px 0; border-bottom:1px dashed #ddd; }
+    .logItem:last-child{ border-bottom:0; }
+    .tiny{ font-size:12px; color:var(--muted); }
 
-    .last-updated {
-      margin-top: 24px;
-      text-align: center;
-      font-size: 12px;
-      color: #999;
-      font-style: italic;
+    .last-updated{
+      margin-top:24px;
+      text-align:center;
+      font-size:12px;
+      color:#999;
+      font-style:italic;
     }
-
-    /* 📱 Mobile spacing refinements */
-@media (max-width: 650px) {
-
-  /* Tighten layout inside each action */
-  .row.action {
-    gap: 6px;
-    margin-bottom: 8px;
-  }
-
-  /* Pull button closer to its input */
-  .row.action button {
-    margin-top: 4px;
-  }
-
-  /* Reduce space under helper text */
-  .row.action .muted {
-    margin-bottom: 4px;
-  }
-
-  /* Slightly tighten label rhythm */
-  label {
-    margin-top: 8px;
-  }
-
-  /* Less space after the last action (before Reset) */
-  .row.action:last-of-type {
-    margin-bottom: 8px;
-  }
-}
-
-
   </style>
 </head>
 
@@ -291,11 +253,8 @@
       </div>
 
       <label for="mod">Modifier (optional)</label>
-      <div class="row">
-        <input id="mod" type="number" value="0" />
-      </div>
+      <input id="mod" type="number" value="0" />
 
-      <!-- Damage-mode extras -->
       <div id="damageExtras" style="display:none;">
         <label for="damageDie">Damage die (Combat mode)</label>
         <div class="row">
@@ -322,14 +281,14 @@
       </div>
     </div>
 
-    <!-- ❤️ HP TRACKER -->
+    <!-- ❤️ HP TRACKER (ALL STACKED) -->
     <div class="card">
-      
       <h1>💗 HP Tracker</h1>
 
       <label for="maxHp">Max HP</label>
       <input id="maxHp" type="number" value="0" min="0" />
 
+      <!-- Hidden state (do not delete): quick actions + bar depend on this -->
       <input id="damageTaken" type="number" value="0" min="0" style="display:none;" />
 
       <label style="margin-top:14px;">HP Bar</label>
@@ -337,16 +296,15 @@
         <div id="hpBarFill" class="hpbar-fill"></div>
       </div>
       <div class="muted" id="hpBarText" style="margin-bottom:0;">0 / 0</div>
-      
+
       <div class="divider"></div>
 
-      <h1>⚡ Quick actions</h1>
+      <h2>⚡ Quick actions</h2>
 
       <div class="row action">
         <div>
           <label for="damageAmount">Take damage</label>
           <input id="damageAmount" type="number" value="0" min="0" />
-          <button id="applyDamageBtn">Apply Damage</button>
           <div class="muted">Adds to damage taken.</div>
         </div>
         <div>
@@ -359,7 +317,6 @@
         <div>
           <label for="healAmount">Healing</label>
           <input id="healAmount" type="number" value="0" min="0" />
-          <button id="applyHealBtn">Apply Healing</button>
           <div class="muted">Subtracts from damage taken.</div>
         </div>
         <div>
@@ -372,7 +329,6 @@
         <div>
           <label for="levelHpGain">Level up: HP gained</label>
           <input id="levelHpGain" type="number" value="0" min="0" />
-          <button id="applyLevelBtn">Apply Level Up</button>
           <div class="muted">Adds to Max HP.</div>
         </div>
         <div>
@@ -382,12 +338,11 @@
       </div>
 
       <button class="btnDangerText" id="resetHpBtn" style="margin-top:6px;">Reset (clear damage + log)</button>
-      <button id="resetHpBtn">Reset...</button> 
 
       <div class="divider"></div>
 
       <h2>📜 HP Log</h2>
-      <div class="muted">Saved on this device.</div>
+      <div class="muted">Saved on this device (persists if they close the tab).</div>
       <div class="log" id="hpLog"></div>
     </div>
 
@@ -396,10 +351,9 @@
   <div id="lastUpdated" class="last-updated">Last updated: —</div>
 
   <script>
-    const STORAGE_KEY = "roll_engine_hp_tracker_v3";
+    const STORAGE_KEY = "roll_engine_hp_tracker_clean_v1";
 
     // d20 outcome tiers for "check" mode
-    // [min, max, label, tone]
     const d20Outcomes = [
       [1, 5,   "Failure",         "bad"],
       [6, 10,  "Partial Failure", "warn"],
@@ -408,7 +362,6 @@
     ];
 
     const el = {
-      // roll engine
       rollType: document.getElementById("rollType"),
       count: document.getElementById("count"),
       die: document.getElementById("die"),
@@ -418,10 +371,9 @@
       damageMod: document.getElementById("damageMod"),
       rollBtn: document.getElementById("rollBtn"),
       output: document.getElementById("output"),
-      damageTaken: document.getElementById("damageTaken")
 
-      // hp tracker
       maxHp: document.getElementById("maxHp"),
+      damageTaken: document.getElementById("damageTaken"),
       hpBarFill: document.getElementById("hpBarFill"),
       hpBarText: document.getElementById("hpBarText"),
 
@@ -450,9 +402,9 @@
       el.damageExtras.style.display = isDamage ? "block" : "none";
     }
 
-    function outcomeForCheck(total, dieSides) {
+    function outcomeForCheck(total, dieSides){
       if (dieSides !== 20) return { label: "Rolled!", tone: "warn" };
-      for (const [min, max, label, tone] of d20Outcomes) {
+      for (const [min, max, label, tone] of d20Outcomes){
         if (total >= min && total <= max) return { label, tone };
       }
       return { label: "Rolled!", tone: "warn" };
@@ -463,7 +415,7 @@
       return `<div class="pill ${cls}">${label}</div>`;
     }
 
-    // HP log
+    // Log (simple + persistent)
     function readLog(){
       try{
         const raw = el.hpLog.dataset.items;
@@ -492,29 +444,24 @@
       writeLog(items.slice(0, 60));
     }
 
-    // HP calc + bar
-    function updateHpRemainingAndBar(){
-      const maxHp = Math.max(0, parseInt(el.maxHp?.value || "0", 10));
-      const dmg   = Math.max(0, parseInt(el.damageTaken?.value || "0", 10));
-    
-      const remaining = Math.max(0, maxHp - dmg);
+    // HP bar calc
+    function updateHpBar(){
+      const maxHp = Math.max(0, parseInt(el.maxHp.value || "0", 10));
+      const dmg   = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
+      const remaining = clamp(maxHp - dmg, 0, maxHp);
       const pct = maxHp > 0 ? (remaining / maxHp) * 100 : 0;
-    
-      if (el.hpBarFill) {
-        el.hpBarFill.style.width = `${pct}%`;
-    
-        let color = "var(--good)";
-        if (pct <= 30) color = "var(--bad)";
-        else if (pct <= 60) color = "var(--warn)";
-        el.hpBarFill.style.background = color;
-      }
-    
-      if (el.hpBarText) {
-        el.hpBarText.textContent = `${remaining} / ${maxHp}`;
-      }
+
+      el.hpBarFill.style.width = `${pct}%`;
+
+      let color = "var(--good)";
+      if (pct <= 30) color = "var(--bad)";
+      else if (pct <= 60) color = "var(--warn)";
+      el.hpBarFill.style.background = color;
+
+      el.hpBarText.textContent = `${remaining} / ${maxHp}`;
     }
 
-    // State
+    // State save/load
     function getState(){
       return {
         rollType: el.rollType.value,
@@ -558,15 +505,16 @@
       el.damageMod.value = String(state.damageMod ?? 0);
 
       el.maxHp.value = String(state.maxHp ?? 0);
+      el.damageTaken.value = String(state.damageTaken ?? 0);
 
       writeLog(state.hpLog || []);
       syncRollTypeUI();
-      updateHpRemainingAndBar();
+      updateHpBar();
 
       if (state.lastUpdatedISO) setLastUpdated(new Date(state.lastUpdatedISO));
     }
 
-    // Roll
+    // Roll action
     function doRoll(){
       const rollType = el.rollType.value;
 
@@ -612,149 +560,58 @@
     el.rollType.addEventListener("change", () => { syncRollTypeUI(); saveState(); });
     el.rollBtn.addEventListener("click", doRoll);
 
-    ["change","input"].forEach(evt => {
+    ["input","change"].forEach(evt => {
       el.count.addEventListener(evt, saveState);
       el.die.addEventListener(evt, saveState);
       el.mod.addEventListener(evt, saveState);
       el.damageDie.addEventListener(evt, saveState);
       el.damageMod.addEventListener(evt, saveState);
 
-      el.maxHp.addEventListener(evt, () => { updateHpRemainingAndBar(); saveState(); });
-      el.damageTaken?.addEventListener(evt, () => {
-        updateHpRemainingAndBar();
-        saveState();
-      });
+      el.maxHp.addEventListener(evt, () => { updateHpBar(); saveState(); });
     });
 
-     el.applyDamageBtn?.addEventListener("click", () => {
-      const delta = Math.max(0, parseInt(el.damageAmount?.value || "0", 10));
-      if (delta === 0) return;
-  
-      const current = Math.max(0, parseInt(el.damageTaken?.value || "0", 10));
+    el.applyDamageBtn.addEventListener("click", () => {
+      const delta = Math.max(0, parseInt(el.damageAmount.value || "0", 10));
+      if(!delta) return;
+      const current = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
       el.damageTaken.value = String(current + delta);
-  
-      updateHpRemainingAndBar();
-      addLog?.(`Took ${delta} damage. Remaining HP = ${el.hpBarText?.textContent || ""}`);
-      saveState?.();
+      updateHpBar();
+      addLog(`Took ${delta} damage. (${el.hpBarText.textContent})`);
+      saveState();
     });
-  
-    el.applyHealBtn?.addEventListener("click", () => {
-      const heal = Math.max(0, parseInt(el.healAmount?.value || "0", 10));
-      if (heal === 0) return;
-  
-      const current = Math.max(0, parseInt(el.damageTaken?.value || "0", 10));
+
+    el.applyHealBtn.addEventListener("click", () => {
+      const heal = Math.max(0, parseInt(el.healAmount.value || "0", 10));
+      if(!heal) return;
+      const current = Math.max(0, parseInt(el.damageTaken.value || "0", 10));
       el.damageTaken.value = String(Math.max(0, current - heal));
-  
-      updateHpRemainingAndBar();
-      addLog?.(`Healed ${heal}. Remaining HP = ${el.hpBarText?.textContent || ""}`);
-      saveState?.();
+      updateHpBar();
+      addLog(`Healed ${heal}. (${el.hpBarText.textContent})`);
+      saveState();
     });
-  
-    el.applyLevelBtn?.addEventListener("click", () => {
-      const gain = Math.max(0, parseInt(el.levelHpGain?.value || "0", 10));
-      if (gain === 0) return;
-  
-      const currentMax = Math.max(0, parseInt(el.maxHp?.value || "0", 10));
+
+    el.applyLevelBtn.addEventListener("click", () => {
+      const gain = Math.max(0, parseInt(el.levelHpGain.value || "0", 10));
+      if(!gain) return;
+      const currentMax = Math.max(0, parseInt(el.maxHp.value || "0", 10));
       el.maxHp.value = String(currentMax + gain);
-  
-      updateHpRemainingAndBar();
-      addLog?.(`Leveled up: Max HP +${gain} → ${el.maxHp.value}.`);
-      saveState?.();
+      updateHpBar();
+      addLog(`Leveled up: Max HP +${gain} → ${el.maxHp.value}. (${el.hpBarText.textContent})`);
+      saveState();
     });
 
     el.resetHpBtn.addEventListener("click", () => {
       el.damageTaken.value = "0";
-      updateHpRemainingAndBar();
+      updateHpBar();
       writeLog([]);
       addLog("Reset HP tracker.");
       saveState();
     });
 
-    function wireHpTracker() {
-  const maxHpEl = document.getElementById("maxHp");
-  const damageTakenEl = document.getElementById("damageTaken");
-  const hpBarFillEl = document.getElementById("hpBarFill");
-  const hpBarTextEl = document.getElementById("hpBarText");
-
-  const dmgAmtEl = document.getElementById("damageAmount");
-  const healAmtEl = document.getElementById("healAmount");
-  const levelGainEl = document.getElementById("levelHpGain");
-
-  const applyDmgBtn = document.getElementById("applyDamageBtn");
-  const applyHealBtn = document.getElementById("applyHealBtn");
-  const applyLevelBtn = document.getElementById("applyLevelBtn");
-  const resetBtn = document.getElementById("resetHpBtn");
-
-  // If any critical element is missing, stop quietly (prevents whole script from dying)
-  if (!maxHpEl || !damageTakenEl || !hpBarFillEl || !hpBarTextEl) return;
-
-  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-
-  function updateBar() {
-    const maxHp = Math.max(0, parseInt(maxHpEl.value || "0", 10));
-    const dmg = Math.max(0, parseInt(damageTakenEl.value || "0", 10));
-    const remaining = clamp(maxHp - dmg, 0, maxHp);
-    const pct = maxHp > 0 ? (remaining / maxHp) * 100 : 0;
-
-    hpBarFillEl.style.width = `${pct}%`;
-
-    let color = "var(--good)";
-    if (pct <= 30) color = "var(--bad)";
-    else if (pct <= 60) color = "var(--warn)";
-    hpBarFillEl.style.background = color;
-
-    hpBarTextEl.textContent = `${remaining} / ${maxHp}`;
-  }
-
-  // ✅ live updates when Max HP changes
-  ["input", "change"].forEach(evt => {
-    maxHpEl.addEventListener(evt, updateBar);
-  });
-
-  // ✅ Apply Damage
-  applyDmgBtn?.addEventListener("click", () => {
-    const delta = Math.max(0, parseInt(dmgAmtEl?.value || "0", 10));
-    if (!delta) return;
-    const current = Math.max(0, parseInt(damageTakenEl.value || "0", 10));
-    damageTakenEl.value = String(current + delta);
-    updateBar();
-  });
-
-  // ✅ Apply Healing
-  applyHealBtn?.addEventListener("click", () => {
-    const heal = Math.max(0, parseInt(healAmtEl?.value || "0", 10));
-    if (!heal) return;
-    const current = Math.max(0, parseInt(damageTakenEl.value || "0", 10));
-    damageTakenEl.value = String(Math.max(0, current - heal));
-    updateBar();
-  });
-
-  // ✅ Apply Level Up
-  applyLevelBtn?.addEventListener("click", () => {
-    const gain = Math.max(0, parseInt(levelGainEl?.value || "0", 10));
-    if (!gain) return;
-    const currentMax = Math.max(0, parseInt(maxHpEl.value || "0", 10));
-    maxHpEl.value = String(currentMax + gain);
-    updateBar();
-  });
-
-  // ✅ Reset
-  resetBtn?.addEventListener("click", () => {
-    damageTakenEl.value = "0";
-    updateBar();
-  });
-
-  // initial paint
-  updateBar();
-}
-
-// Make sure the DOM exists before wiring
-document.addEventListener("DOMContentLoaded", wireHpTracker);
-    
     // Init
     syncRollTypeUI();
     writeLog([]);
-    updateHpRemainingAndBar();
+    updateHpBar();
     setLastUpdated();
 
     const saved = loadState();
@@ -762,10 +619,3 @@ document.addEventListener("DOMContentLoaded", wireHpTracker);
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
